@@ -1,4 +1,4 @@
-# Notifly Back End
+# Notifly App
 
 Application URL: https://notifly-dbce7.firebaseapp.com/schedule
 
@@ -6,6 +6,7 @@ Application URL: https://notifly-dbce7.firebaseapp.com/schedule
 Notifly is a scheduling application that allows clients to book in their customers on their schedule. Similar to calendly. 
 
 ### Tech Involved: 
+* **Web Application Front End**: ReactJS and redux state management for front-end of web application.
 * **Web Application Back End**: Firebase functions which is running Nodejs. 
 
 ### Challenges:
