@@ -1,6 +1,6 @@
 # Notifly Back-end
 
-* Live at: https://notifly-897c7.web.app/schedule
+* Live at: https://notifly-897c7.web.app/
 
 ## Summary:
 The Notifly application is a real-time scheduling application for small businesses. 
