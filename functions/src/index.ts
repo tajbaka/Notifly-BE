@@ -1,22 +1,20 @@
-const functions = require('firebase-functions');
-const cors = require('cors')({origin: true});
-const admin = require('firebase-admin');
-const moment = require('moment');
-
-const serviceAccount = require("../serviceAccountKey.json");
+import * as functions from "firebase-functions";
+import * as admin from 'firebase-admin';
+import { serviceAccountKey } from './serviceAccountKey';
+const cors = require('cors');
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://notifly-dbce7.firebaseio.com"
+  credential: admin.credential.cert(JSON.parse(JSON.stringify(serviceAccountKey))),
+  databaseURL: "https://notifly-897c7-default-rtdb.firebaseio.com/"
 });
 
-exports.createAdminAccount = functions.https.onRequest((req, res) => {
-    cors(req, res, () => {
+export const createAdminAccount = functions.https.onRequest((req, res) => {
+    return cors()(req, res, () => {
         const uid = req.query.uid;
         const schedules = [
             {
-              id: Math.floor(Math.random()*(999-100+1)+100).toString(),
-              title: 'default'
+                id: Math.floor(Math.random()*(999-100+1)+100).toString(),
+                title: 'default'
             }
         ];
         const settings = {
@@ -34,39 +32,39 @@ exports.createAdminAccount = functions.https.onRequest((req, res) => {
         .catch((err) => {
             res.status(200).json('Error');
         });
-    })
+    });
 });
 
-exports.updateAdminSchedule = functions.https.onRequest((req, res) => {
-    cors(req, res, () => {
+export const updateAdminSchedule = functions.https.onRequest((req, res) => {
+    return cors()(req, res, () => {
         const uid = req.query.uid;
         const body = req.body;
         const { schedules } = body;
-        admin.database().ref(`/users/${uid}`).update({ schedules }).then(response => {
+        admin.database().ref(`/users/${uid}`).update({ schedules }).then((response: any) => {
             res.status(200).json('Success');
         })
-        .catch((err) => {
+        .catch((err: any) => {
             res.status(200).json('Error');
         });
-    })
+    });
 });
 
-exports.updateAdminSettings = functions.https.onRequest((req, res) => {
-    cors(req, res, () => {
+export const updateAdminSettings = functions.https.onRequest((req, res) => {
+    return cors()(req, res, () => {
         const uid = req.query.uid;
         const body = req.body;
         const { settings } = body;
-        admin.database().ref(`/users/${uid}`).update({ settings }).then(response => {
+        admin.database().ref(`/users/${uid}`).update({ settings }).then((response: any) => {
             res.status(200).json('Success');
         })
-        .catch((err) => {
+        .catch((err: any) => {
             res.status(200).json('Error');
         });
-    })
+    });
 });
 
-exports.updateUser = functions.https.onRequest((req, res) => {
-    cors(req, res, () => {
+export const updateUser = functions.https.onRequest((req, res) => {
+    return cors()(req, res, () => {
         const userUid = req.query.uid;
         const body = req.body;
         const { user, adminUid } = body;
@@ -76,11 +74,11 @@ exports.updateUser = functions.https.onRequest((req, res) => {
         .catch((err) => {
             res.status(200).json('Error');
         });
-    })
+    });
 });
 
-exports.createUserAccount = functions.https.onRequest((req, res) => {
-    cors(req, res, () => {
+export const createUserAccount = functions.https.onRequest((req, res) => {
+    return cors()(req, res, () => {
         const uid = req.query.uid;
         const body = req.body;
         const { adminUid, userName, userEmail, userPhoneNumber, language } = body;
@@ -89,11 +87,11 @@ exports.createUserAccount = functions.https.onRequest((req, res) => {
         }).catch((err) => {
             res.status(200).json('Error');
         });
-    })  
+    });
 });
 
-exports.notifications = functions.https.onRequest((req, res) => {
-    cors(req, res, () => {
+export const notifications = functions.https.onRequest((req, res) => {
+    return cors()(req, res, () => {
         admin.database().ref(`/users/`).once('value').then(snapshot => {
             const users = snapshot.val();
             const usersKeys = Object.keys(users);
@@ -104,7 +102,7 @@ exports.notifications = functions.https.onRequest((req, res) => {
                 for(let j = 0; j < schedules.length; j++){
                     const schedule = schedules[j];
                     const events = schedule.events;
-                    for(k = 0; k < events.length; k++){
+                    for(let k = 0; k < events.length; k++){
                         const event = events[k];
                         const eventStartTime = new Date(event.start);
                         const currentDate = new Date();
@@ -125,5 +123,5 @@ exports.notifications = functions.https.onRequest((req, res) => {
             }
             res.status(200).json('Success');
         });
-    })
+    });
 });
